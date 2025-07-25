@@ -213,7 +213,7 @@ def project_detections_into_bev(bev_map, detections, configs, color=[]):
         # draw object bounding box into birds-eye view
         if not color:
             color = configs.obj_colors[int(_id)]
-        
+       
         # get object corners within bev image
         bev_corners = np.zeros((4, 2), dtype=np.float32)
         cos_yaw = np.cos(yaw)
@@ -228,11 +228,11 @@ def project_detections_into_bev(bev_map, detections, configs, color=[]):
         bev_corners[3, 1] = y + w / 2 * sin_yaw + l / 2 * cos_yaw
         
         # draw object as box
-        corners_int = bev_corners.reshape(-1, 1, 2).astype(int)
+        corners_int = bev_corners.reshape(-1, 1, 2).astype(int)        
         cv2.polylines(bev_map, [corners_int], True, color, 2)
 
         # draw colored line to identify object front
-        corners_int = bev_corners.reshape(-1, 2)
+        corners_int = bev_corners.reshape(-1, 2).astype(int)        
         cv2.line(bev_map, (corners_int[0, 0], corners_int[0, 1]), (corners_int[3, 0], corners_int[3, 1]), (255, 255, 0), 2)
 
 
