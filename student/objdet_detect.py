@@ -217,7 +217,7 @@ def detect_objects(input_bev_maps, model, configs):
     objects = [] 
 
     ## step 1 : check whether there are any detections
-    if len(detections > 0):
+    if len(detections) > 0:
         ## step 2 : loop over all detections
         for det in detections:
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
