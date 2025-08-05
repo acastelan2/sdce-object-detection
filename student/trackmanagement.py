@@ -35,18 +35,6 @@ class Track:
         # - initialize track state and track score with appropriate values
         ############
 
-        # self.x = np.matrix([[49.53980697],
-        #                 [ 3.41006279],
-        #                 [ 0.91790581],
-        #                 [ 0.        ],
-        #                 [ 0.        ],
-        #                 [ 0.        ]])
-        # self.P = np.matrix([[9.0e-02, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00],
-        #                 [0.0e+00, 9.0e-02, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00],
-        #                 [0.0e+00, 0.0e+00, 6.4e-03, 0.0e+00, 0.0e+00, 0.0e+00],
-        #                 [0.0e+00, 0.0e+00, 0.0e+00, 2.5e+03, 0.0e+00, 0.0e+00],
-        #                 [0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00, 2.5e+03, 0.0e+00],
-        #                 [0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00, 2.5e+01]])
         pos_sens = np.ones((4,1))
         pos_sens[0:meas.sensor.dim_meas] = meas.z
         pos_veh = meas.sensor.sens_to_veh*pos_sens
@@ -88,7 +76,7 @@ class Track:
     def update_score(self, increase):
         if increase:
           self.numerator += 1
-        else:# self.numerator > 0: #decrease but don't allow negative scores
+        else:
           self.numerator -= 1  
 
         self.score = self.numerator/params.window
@@ -126,12 +114,9 @@ class Trackmanagement:
         for i in unassigned_tracks:
             track = self.track_list[i]
             # check visibility    
-            print(meas_list)
             if meas_list: # if not empty
-                print(f"bool value of in fov: {meas_list[0].sensor.in_fov(track.x)}")
                 if meas_list[0].sensor.in_fov(track.x):
                     # your code goes here
-                    print('decrease score')
                     track.update_score(increase=False)
 
         # delete old tracks   
@@ -140,9 +125,6 @@ class Trackmanagement:
             if  (track.score < 0) or \
                 (track.state == 'confirmed' and track.score < params.delete_threshold) or \
                 (track.P[0,0] > params.max_P or track.P[1,1] > params.max_P):
-                  print("track deleted")
-                  print(f"track P[0]: {track.P[0,0]}")
-                  print(f"track P[1]: {track.P[1,1]}")
                   delete_tracks.append(track)
      
         for track in delete_tracks:
